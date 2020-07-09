@@ -7,8 +7,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Portal Colearning</title>
 	<link rel='icon' type='image/x-icon' href="{{ asset('/images/logo-colearning.png') }}" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-		integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<link rel="stylesheet" href="{{ asset('/css/default.css') }}">
 
 	<style>
@@ -19,7 +18,11 @@
 		.navbar-brand {
 			padding: 5px;
 		}
-
+		#user-avatar {
+			display: flex;
+			align-items: center;
+			justify-content: center
+		}
 		.avatar {
 			vertical-align: middle;
 			border-radius: 50%;
@@ -38,26 +41,47 @@
 			</a>
 			<div class="container-fluid">
 				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
-						aria-expanded="false" aria-controls="navbar">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 						<span class="sr-only">Toggle navigation</span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-
 				</div>
-
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li><a class='nav-item' href="{{ route('home') }}">Home</a></li>
 						<li><a class='nav-item' href="{{ route('users.index') }}">Usuários</a></li>
-
+						<li><a class='nav-item' href="{{ route('users.index') }}">Pessoas</a></li>
+						<li role="presentation">
+							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								Empresas <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a class='nav-item' href="#">Cadastro</a></li>
+								<li><a class='nav-item' href="#">Membros</a></li>
+								<li><a class='nav-item' href="#">Prestacao de contas</a></li>
+							</ul>
+						</li>
 					</ul>
 
 					<ul class="nav navbar-nav navbar-right">
-						<li><a class='nav-item' href='#'> Bem vindo <b>{{Auth::guard()->user()->name }}</b>.</a></li>
-						<li><a class='nav-item' href="{{ url('/logout') }}">Sair / Logout</a></li>
+						<!-- Split button -->
+
+						<li role="presentation">
+							<a class="navbar-brand" id="user-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+								@if(Auth::guard()->user()->avatar)
+								<img class="avatar" style="width: 32px;height: 32px;" src="{{ asset('storage/' . Auth::guard()->user()->avatar) }}" alt="{{ Auth::guard()->user()->name }}" /></p>
+								@else
+								Usuário <span class="caret"></span>
+								@endif
+							</a>
+							<ul class="dropdown-menu">
+								<!-- <li><a class='nav-item' href='#'> Bem vindo <b>{{Auth::guard()->user()->name }}</b>.</a></li> -->
+								<li><a class='nav-item' href="{{ url('/logout') }}">Sair / Logout</a></li>
+							</ul>
+						</li>
+
 					</ul>
 				</div>
 				<!--/.nav-collapse -->
@@ -112,9 +136,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
 	<!-- Latest compiled and minified JavaScript -->
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-		integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-		crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
 	<!-- nosso código no de baixo -->
 	<script type="text/javascript" src="{{ asset('/js/default.js') }}"></script>
