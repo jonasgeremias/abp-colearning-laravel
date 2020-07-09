@@ -1,2 +1,2 @@
 # abp-colearning-laravel
- Projeto ABP da disciplina de SIstemas WEB
+ Projeto ABP da disciplina de Sistemas WEB
