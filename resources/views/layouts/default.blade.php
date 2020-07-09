@@ -24,7 +24,6 @@
 			vertical-align: middle;
 			border-radius: 50%;
 		}
-		
 	</style>
 
 </head>
