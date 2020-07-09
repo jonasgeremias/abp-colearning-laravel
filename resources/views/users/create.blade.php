@@ -11,7 +11,7 @@
 	<fieldset>
 		<div class="form-group @if ($errors->has('avatar')) has-error @endif">
 			<label class="control-label" for="avatar">Foto do usuário</label>
-			<input onclick="this.value=null" onchange="updateAvatar()" type="file" id="avatar" name="avatar" class="form-control btn btn-primary" accept="image/png, image/jpeg" />
+			<input onclick="this.value=null" onchange="" type="file" id="avatar" name="avatar" class="form-control btn btn-primary" accept="image/png, image/jpeg" />
 			@if ($errors->has('avatar'))
 			<span class="invalid-feedback help-block" role="alert">
 				<strong>{{ $errors->first('avatar') }}</strong>
@@ -76,32 +76,11 @@
 		<button type="submit" class="btn btn-success">Cadastrar Usuário</button>
 	</fieldset>
 
-
 	<script>
-		function updateAvatar(event) {
-			var selectedFile = event.target.files[0];
-			var reader = new FileReader();
-
-			//var imgtag = document.getElementById("img_avatar");
-			//imgtag.title = selectedFile.name;
-
-			reader.onload = function (e) {
-				var image=new Image();
-				image.src=e.target.result;
-				image.onload = function () {
-				document.getElementById('img_avatar').src=image.src;
-		};
-
-			reader.readAsDataURL(selectedFile);
-		}
-
 		function deleteAvatar() {
-			var inputAvatar = document.getElementById('avatar');
-			inputAvatar.value = "";
-			updateAvatar();
+			document.getElementById('avatar').value = "";
 			return true;
 		}
-
 	</script>
 </form>
 @endsection

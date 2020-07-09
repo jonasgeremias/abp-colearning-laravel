@@ -10,7 +10,7 @@
 	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<td>Avatar</td>
+				<th>Avatar</th>
 				<th>Código</th>
 				<th>Nome</th>
 				<th>Permissão</th>
@@ -23,7 +23,7 @@
 			<tr>	
 				<td>
 					@if($user->avatar)
-						<img class="avatar"  style="width: 50px;height: 50px;" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" /></p>
+						<img class="avatar" style="width: 50px;height: 50px;" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" /></p>
 					@endif
 				</td>
 				<td>{{ $user->id }}</td>

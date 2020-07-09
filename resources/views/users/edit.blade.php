@@ -72,6 +72,7 @@
 			</span>
 			@endif
 		</div>
+
 		<div class="form-group @if ($errors->has('password')) has-error @endif">
 			<label class="control-label" for="password">Mudar Senha de Acesso</label>
 			<input type="password" class="form-control" id="password" name="password">
@@ -81,8 +82,9 @@
 			</span>
 			@endif
 		</div>
+		
 		<div class="form-group">
-			<label class="control-label" for="password_confirmation">Repitir a Nova Senha</label>
+			<label class="control-label" for="password_confirmation">Repita a Nova Senha</label>
 			<input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
 		</div>
 		<br />
