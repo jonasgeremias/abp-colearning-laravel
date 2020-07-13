@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePrestacaoContaTable extends Migration
+class CreatePrestacaoContasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreatePrestacaoContaTable extends Migration
      */
     public function up()
     {
-        Schema::create('prestacao_conta', function (Blueprint $table) {
+        Schema::create('prestacao_contas', function (Blueprint $table) {
             $table->bigIncrements('id');
 				$table->timestamps();
 				$table->unsignedBigInteger('user_id');
@@ -58,6 +58,6 @@ class CreatePrestacaoContaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('prestacao_conta');
+        Schema::dropIfExists('prestacao_contas');
     }
 }

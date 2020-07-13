@@ -14,6 +14,10 @@
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('users', 'UsersController');
+Route::resource('pessoas', 'PessoasController');
+Route::resource('empresas', 'EmpresasController');
+Route::resource('membros', 'MembrosController');
+Route::resource('prestacaocontas', 'PrestacaoContaController');
 
 //Auth::routes(['register' => false]);
 Auth::routes();

@@ -12,7 +12,7 @@
 
 	<style>
 		html {
-			min-width: 350px !important;
+			min-width: 1000px !important;
 		}
 
 		.navbar-brand {
@@ -52,15 +52,15 @@
 					<ul class="nav navbar-nav">
 						<li><a class='nav-item' href="{{ route('home') }}">Home</a></li>
 						<li><a class='nav-item' href="{{ route('users.index') }}">Usuários</a></li>
-						<li><a class='nav-item' href="{{ route('users.index') }}">Pessoas</a></li>
+						<li><a class='nav-item' href="{{ route('pessoas.index') }}">Pessoas</a></li>
 						<li role="presentation">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 								Empresas <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a class='nav-item' href="#">Cadastro</a></li>
-								<li><a class='nav-item' href="#">Membros</a></li>
-								<li><a class='nav-item' href="#">Prestacao de contas</a></li>
+								<li><a class='nav-item' href="{{ route('empresas.index') }}">Cadastro</a></li>
+								<li><a class='nav-item' href="{{ route('membros.index') }}">Membros</a></li>
+								<li><a class='nav-item' href="{{ route('prestacaocontas.index') }}">Prestacao de contas</a></li>
 							</ul>
 						</li>
 					</ul>
