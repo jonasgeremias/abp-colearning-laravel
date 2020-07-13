@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -24,6 +25,15 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
 		  });
+
+		  	DB::table('users')->insert([
+				'name' => 'Admin',
+				'email' => 'admin@admin',
+				'password' => Hash::make('admin'),
+				'permission_id' => 1
+			]);
+		
+
     }
 
     /**

@@ -21,7 +21,7 @@ class UsersController extends Controller
 		$rules = array(
 			'name' => 'required|string|max:255',
 			'email' => 'required|email|string|max:255|unique:users',
-			'password' => 'required|string|min:6|confirmed',
+			'password' => 'required|string|min:5|confirmed',
 		);
 
 		// custom validation error messages.

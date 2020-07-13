@@ -101,7 +101,7 @@
 		</div>
 		<div class="form-group @if ($errors->has('pass_wifi')) has-error @endif">
 			<label class="control-label" for="pass_wifi">Senha do WI-FI</label>
-			<input type="password" class="form-control" id="pass_wifi" name="pass_wifi" value="{{ old('pass_wifi', $pessoa->pass_wifi) }}">
+			<input type="text" class="form-control" id="pass_wifi" name="pass_wifi" value="{{ old('pass_wifi', $pessoa->pass_wifi) }}">
 			@if ($errors->has('pass_wifi'))
 			<span class="invalid-feedback help-block" role="alert">
 				<strong>{{ $errors->first('pass_wifi') }}</strong>

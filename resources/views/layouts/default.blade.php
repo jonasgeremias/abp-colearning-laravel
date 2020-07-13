@@ -69,7 +69,7 @@
 						<!-- Split button -->
 
 						<li role="presentation">
-							<a class="navbar-brand" id="user-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+							<a class="" id="user-avatar" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
 								@if(Auth::guard()->user()->avatar)
 								<img class="avatar" style="width: 32px;height: 32px;" src="{{ asset('storage/' . Auth::guard()->user()->avatar) }}" alt="{{ Auth::guard()->user()->name }}" /></p>
 								@else
