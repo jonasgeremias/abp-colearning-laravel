@@ -62,7 +62,6 @@ class PessoasController extends Controller
 
 	public function create(Request $request)
 	{
-		Auth::guard()->user()->permission_id;
 		$permission = Auth::guard()->user()->permission_id;
 		if (($permission != 1) && ($permission != 3)) {
 			return redirect()->back()->with('error', 'Permissão negada.');
@@ -104,7 +103,6 @@ class PessoasController extends Controller
 
 	public function edit(Pessoa $pessoa)
 	{
-		Auth::guard()->user()->permission_id;
 		$permission = Auth::guard()->user()->permission_id;
 		if (($permission != 1) && ($permission != 3)) {
 			return redirect()->back()->with('error', 'Permissão negada.');
@@ -136,7 +134,6 @@ class PessoasController extends Controller
 
 	public function destroy(Pessoa $pessoa)
 	{
-		Auth::guard()->user()->permission_id;
 		$permission = Auth::guard()->user()->permission_id;
 		if (($permission != 1) && ($permission != 3)) {
 			return redirect()->back()->with('error', 'Permissão negada.');

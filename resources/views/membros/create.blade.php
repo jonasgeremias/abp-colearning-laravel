@@ -6,7 +6,7 @@
 	<h2>Novo Membro</h2>
 </div>
 <!-- editando -->
-<form action="{{ route('membro.store') }}" method="post">
+<form action="{{ route('membros.store') }}" method="post">
 	@csrf
 	<fieldset>
 		
@@ -104,14 +104,7 @@
 			@endif
 		</div>
 		
-		<button type="submit" class="btn btn-success">Cadastrar Usuário</button>
+		<button type="submit" class="btn btn-success">Cadastrar Membro</button>
 	</fieldset>
-
-	<script>
-		function deleteAvatar() {
-			document.getElementById('avatar').value = "";
-			return true;
-		}
-	</script>
 </form>
 @endsection

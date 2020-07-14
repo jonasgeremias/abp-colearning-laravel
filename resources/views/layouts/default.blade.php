@@ -69,7 +69,7 @@
 								Empresas <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a class='nav-item' href="{{ route('empresas.index') }}">Cadastro</a></li>
+								<li><a class='nav-item' href="{{ route('company.index') }}">Cadastro</a></li>
 								<li><a class='nav-item' href="{{ route('membros.index') }}">Membros</a></li>
 								<li><a class='nav-item' href="{{ route('prestacaocontas.index') }}">Prestacao de contas</a></li>
 							</ul>

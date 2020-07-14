@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Membro;
 use App\MembroTipo;
 use App\MembroStatus;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -34,15 +35,15 @@ class MembrosController extends Controller
 		// custom validation error messages.
 
 		$messages = array(
-			'pessoa_id' => '()',
-			'empresa_id' => '()',
-			'funcao_membro_id' => 'Por favor informe uma função válida',
-			'user_id' => 'Por favor informe um nome de usuário válido',			
-			'data_inicio' => 'Por favor informe uma data válida',
-			'data_vigencia' => 'Por favor informe uma data válida',
+			'pessoa_id.required' => '()',
+			'empresa_id.required' => '()',
+			'funcao_membro_id.required' => 'Por favor informe uma função válida',
+			'user_id.required' => 'Por favor informe um nome de usuário válido',			
+			'data_inicio.required' => 'Por favor informe uma data válida',
+			'data_vigencia.required' => 'Por favor informe uma data válida',
 			'anexo_documentos' => '',
 			'anexo_contratos' => '',
-			'status_id' => 'Por favor selecione uma opção válida',
+			'status_id.required' => 'Por favor selecione uma opção válida',
 		);
 
 		$labels = array(		
@@ -76,10 +77,14 @@ class MembrosController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function create()
-	{
-		$tipos = MembroTipo::pluck('desc_tipo', 'id');
+	{	
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
+
 		$status = MembroStatus::pluck('desc_status', 'id');
-		return view('membros.create',['tipos'=>$tipos,'status'=>$status]);
+		return view('membros.create', ['status'=>$status]);
 		
 	}
 
@@ -117,10 +122,13 @@ class MembrosController extends Controller
 
 	public function edit(Membro $membro)
 	{
-		$tipos = MembroTipo::pluck('desc_tipo', 'id');
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
+
 		$status = MembroStatus::pluck('desc_status', 'id');
-		return view('membros.edit', array('membro' => $membro,'tipos'=>$tipos, 'status'=>$status));
-		
+		return view('membros.edit', array('membro' => $membro, 'status'=>$status));
 	}
 
 	public function update(Request $request, Membro $membro)
@@ -148,13 +156,16 @@ class MembrosController extends Controller
 
 	public function destroy(Membro $membro)
 	{
-		
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
+
 		$membro->delete();
 
 		return redirect()
 			->route('membros.index')
 			->with('success', 'Membro deletado com sucesso!');
-			
 	}
 
 }

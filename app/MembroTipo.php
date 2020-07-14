@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MembroStatus extends Model
+class MembroTipo extends Model
 {
-    public $table='membro_status';
+    public $table='membro_tipo';
 }
