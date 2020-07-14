@@ -18,11 +18,20 @@
 		.navbar-brand {
 			padding: 5px;
 		}
+		footer p {
+			font-weight: bold
+		}
+
+		hr {
+			border-top: 2px solid #333;
+		}
+
 		#user-avatar {
 			display: flex;
 			align-items: center;
 			justify-content: center
 		}
+
 		.avatar {
 			vertical-align: middle;
 			border-radius: 50%;
@@ -51,7 +60,9 @@
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
 						<li><a class='nav-item' href="{{ route('home') }}">Home</a></li>
+						@if(Auth::guard()->user()->permission_id == 1)
 						<li><a class='nav-item' href="{{ route('users.index') }}">Usuários</a></li>
+						@endif
 						<li><a class='nav-item' href="{{ route('pessoas.index') }}">Pessoas</a></li>
 						<li role="presentation">
 							<a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">

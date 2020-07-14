@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Pessoa;
 use App\PessoaTipo;
 use App\PessoaStatus;
+use Illuminate\Support\Facades\Auth;
 //use Illuminate\Support\Facades\Storage;
 //use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use Closure;
 
 class PessoasController extends Controller
 {
@@ -15,6 +17,7 @@ class PessoasController extends Controller
 	{
 		$this->middleware('auth');
 	}
+
 
 	private function validator(Request $request)
 	{
@@ -57,8 +60,15 @@ class PessoasController extends Controller
 		return view('pessoas.index',['items'=>$items, 'status'=>$status]);
 	}
 
-	public function create()
+	public function create(Request $request)
 	{
+		Auth::guard()->user()->permission_id;
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
+
+
 		$tipos = PessoaTipo::pluck('desc_tipo', 'id');
 		$status = PessoaStatus::pluck('desc_status', 'id');
 		return view('pessoas.create',['tipos'=>$tipos,'status'=>$status]);
@@ -94,6 +104,11 @@ class PessoasController extends Controller
 
 	public function edit(Pessoa $pessoa)
 	{
+		Auth::guard()->user()->permission_id;
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
 		$tipos = PessoaTipo::pluck('desc_tipo', 'id');
 		$status = PessoaStatus::pluck('desc_status', 'id');
 		return view('pessoas.edit', array('pessoa' => $pessoa,'tipos'=>$tipos, 'status'=>$status));
@@ -101,7 +116,6 @@ class PessoasController extends Controller
 
 	public function update(Request $request, Pessoa $pessoa)
 	{
-		
 		$this->validator($request);
 
 		$pessoa->nome = $request->nome;
@@ -122,6 +136,12 @@ class PessoasController extends Controller
 
 	public function destroy(Pessoa $pessoa)
 	{
+		Auth::guard()->user()->permission_id;
+		$permission = Auth::guard()->user()->permission_id;
+		if (($permission != 1) && ($permission != 3)) {
+			return redirect()->back()->with('error', 'Permissão negada.');
+		}
+
 		$pessoa->delete();
 		return redirect()
 			->route('pessoas.index')

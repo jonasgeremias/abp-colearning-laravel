@@ -13,6 +13,7 @@ class UsersController extends Controller
 	public function __construct()
 	{
 		$this->middleware('auth');
+		$this->middleware('checkadmin');
 	}
 
 	private function validator(Request $request)
@@ -206,4 +207,5 @@ class UsersController extends Controller
 
 		return redirect()->back();
 	}
+
 }

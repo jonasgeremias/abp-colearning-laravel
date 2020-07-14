@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\EmpresaMembro;
-
+use App\Membro;
+use App\MembroTipo;
+use App\MembroStatus;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
@@ -19,69 +20,54 @@ class MembrosController extends Controller
 	{
 		// validation rules.
 		$rules = array(
-			'name' => 'required|string|max:255',
-			'email' => 'required|email|string|max:255|unique:users',
-			'password' => 'required|string|min:6|confirmed',
+			'pessoa_id' => 'required|unsignedBigInteger|max:255',
+			'empresa_id' => 'required|unsignedBigInteger|max:255',
+			'funcao_membro_id' => 'required|unsignedBigInteger|max:14',
+			'user_id' => 'required|unsignedBigInteger|min:4|max:10',			
+			'data_inicio' => 'required|date|max:10',
+			'data_vigencia' => 'required|date|max:10',
+			'anexo_documentos' => 'string|nullable',
+			'anexo_contratos' => 'string|nullable',
+			'status_id' => 'required|unsignedBigInteger|max:10',
 		);
 
 		// custom validation error messages.
+
 		$messages = array(
-			'name.required' => 'Por favor informe um nome de usuário válido',
-			'email.required' => 'Por favor informe um e-mail de usuário válido',
-			'email.email' => 'Por favor informe um e-mail de usuário válido',
-			'email.unique' => 'Este usuário já se encontra em uso',
-			'password.confirmed' => 'Confirme a repetição de senha correta',
+			'pessoa_id' => '()',
+			'empresa_id' => '()',
+			'funcao_membro_id' => 'Por favor informe uma função válida',
+			'user_id' => 'Por favor informe um nome de usuário válido',			
+			'data_inicio' => 'Por favor informe uma data válida',
+			'data_vigencia' => 'Por favor informe uma data válida',
+			'anexo_documentos' => '',
+			'anexo_contratos' => '',
+			'status_id' => 'Por favor selecione uma opção válida',
 		);
 
-		$labels = array(
-			"name" => "nome",
-			"email" => "e-mail",
-			"password" => "senha",
+		$labels = array(		
+		    "pessoa_id" => "Código do Membro",
+			"empresa_id" => "Código da Empresa",
+			"funcao_membro_id" => "Função",
+			"user_id" => "Usuário",		
+			"data_inicio" => "Data Início",
+			"data_vigencia" => "Data Vigência",
+			"anexo_documentos" => "Documentos (opcional)",
+			"anexo_contratos" => "Contrato",
+			"status_id" => "Status",
 		);
 
 		// validate the request.
 		$request->validate($rules, $messages, $labels);
 	}
 
-	private function validatorUpdate(Request $request)
-	{
-		// validation rules.
-		$rules = array(
-			'name' => 'required|string|max:255',
-			'email' => 'required|email|string|max:255',
-			'password' => 'confirmed',
-		);
 
-		// custom validation error messages.
-		$messages = array(
-			'name.required' => 'Por favor informe um nome de usuário válido',
-			'email.required' => 'Por favor informe um e-mail de usuário válido',
-			'email.email' => 'Por favor informe um e-mail de usuário válido',
-			'email.unique' => 'Este usuário já se encontra em uso',
-			'password.confirmed' => 'Confirme a repetição de senha correta',
-		);
-
-		$labels = array(
-			"name" => "nome",
-			"email" => "e-mail",
-			"password" => "senha",
-		);
-
-		// validate the request.
-		$request->validate($rules, $messages, $labels);
-	}
-
-	/**
-	 * Display a listing of the resource.
-	 *
-	 * @return \Illuminate\Http\Response
-	 */
 	public function index()
 	{
-		$items = EmpresaMembro::get();
-		//$permissions = UserPermission::pluck('desc_permission', 'id');
+		$items = Membro::get();
+		$status = MembroStatus::pluck('desc_status', 'id');
 
-		return view('membros.index', array('items' => $items));
+		return view('membros.index',['items'=>$items, 'status'=>$status]);
 	}
 
 	/**
@@ -91,11 +77,11 @@ class MembrosController extends Controller
 	 */
 	public function create()
 	{
-		//$permissions = UserPermission::pluck('desc_permission', 'id');
-		return view('membros.create');//, array('userPermission' => $permissions));
+		$tipos = MembroTipo::pluck('desc_tipo', 'id');
+		$status = MembroStatus::pluck('desc_status', 'id');
+		return view('membros.create',['tipos'=>$tipos,'status'=>$status]);
+		
 	}
-
-
 
 	/**
 	 * Store a newly created resource in storage.
@@ -104,106 +90,71 @@ class MembrosController extends Controller
 	 * @return \Illuminate\Http\Response
 	 */
 	public function store(Request $request)
-	{  /*
-		$this->validator($request);
+	{
+		$this->validator($request);		
 
-		$user = new User();
-		$user->name = $request->name;
-		$user->email = $request->email;
-		$user->permission_id = $request->permission_id;
-		$user->password = Hash::make($request->password);
-
-		if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
-			$user->avatar = $request->avatar->store('users');
-		}
-
-		$user->save();*/
+		$membro = new Membro();
+		$membro->pessoa_id = $request->pessoa_id;
+		$membro->empresa_id = $request->empresa_id;
+		$membro->funcao_membro_id = $request->funcao_membro_id;
+		$membro->user_id = $request->user_id;
+		$membro->data_inicio = $request->data_inicio;
+		$membro->data_vigencia = $request->data_vigencia;
+		$membro->anexo_documentos = $request->anexo_documentos;
+		$membro->anexo_contratos = $request->anexo_contratos;
+		$membro->status_id = $request->status_id;
+		$membro->save();
 
 		return redirect()
 			->route('membros.index')
 			->with('success', 'Membro cadastrado com sucesso!');
 	}
 
-	/**
-	 * Display the specified resource.
-	 *
-	 * @param  \App\User  $user
-	 * @return \Illuminate\Http\Response
-	 */
-	public function show(User $user)
-	{
-		$permissions = UserPermission::pluck('desc_permission', 'id');
-		return view('membros.show', array('user' => $user, 'userPermission' => $permissions));
+	public function show(Membro $membro)
+	{		
+		return view('membros.show', array('membro' => $membro));		
 	}
 
-	/**
-	 * Show the form for editing the specified resource.
-	 *
-	 * @param  \App\User  $user
-	 * @return \Illuminate\Http\Response
-	 */
-	public function edit(User $user)
+	public function edit(Membro $membro)
 	{
-		$permissions = UserPermission::pluck('desc_permission', 'id');
-		return view('users.edit', array('user' => $user, 'userPermission' => $permissions));
-	}
-
-	/**
-	 * Update the specified resource in storage.
-	 *
-	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\User  $user
-	 * @return \Illuminate\Http\Response
-	 */
-	public function update(Request $request, User $user)
-	{
-		$this->validatorUpdate($request);
-
-		$user->name = $request->name;
-		$user->email = $request->email;
-		$user->permission_id = $request->permission_id;
-		if (!empty($request->password)) {
-			$user->password = Hash::make($request->password);
-		}
-
-		if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
-			$user->avatar = $request->avatar->store('users');
-		}
-
-
-		$user->save();
-
-		return redirect()
-			->route('users.index')
-			->with('success', 'Usuário alterado com sucesso!');
-	}
-
-	/**
-	 * Remove the specified resource from storage.
-	 *
-	 * @param  \App\User  $user
-	 * @return \Illuminate\Http\Response
-	 */
-	public function destroy(User $user)
-	{
-		Storage::delete($user->avatar);
-		$user->delete();
-
-		return redirect()
-			->route('users.index')
-			->with('success', 'Usuário deletado com sucesso!');
-	}
-
-	public function destroy_foto(User $user)
-	{
-		dump($user);
+		$tipos = MembroTipo::pluck('desc_tipo', 'id');
+		$status = MembroStatus::pluck('desc_status', 'id');
+		return view('membros.edit', array('membro' => $membro,'tipos'=>$tipos, 'status'=>$status));
 		
-		if (!empty($user->avatar)) {
-			Storage::delete($user->avatar);
-			$user->avatar = null;
-			$user->save();
-		}
-
-		return redirect()->back();
 	}
+
+	public function update(Request $request, Membro $membro)
+	{
+		
+		$this->validator($request);
+
+		$membro = new Membro();
+		$membro->pessoa_id = $request->pessoa_id;
+		$membro->empresa_id = $request->empresa_id;
+		$membro->funcao_membro_id = $request->funcao_membro_id;
+		$membro->user_id = $request->user_id;
+		$membro->data_inicio = $request->data_inicio;
+		$membro->data_vigencia = $request->data_vigencia;
+		$membro->anexo_documentos = $request->anexo_documentos;
+		$membro->anexo_contratos = $request->anexo_contratos;
+		$membro->status_id = $request->status_id;
+		$membro->save();
+
+		return redirect()
+			->route('membros.index')
+			->with('success', 'Membro editado com sucesso!');
+			
+	}
+
+	public function destroy(Membro $membro)
+	{
+		
+		$membro->delete();
+
+		return redirect()
+			->route('membros.index')
+			->with('success', 'Membro deletado com sucesso!');
+			
+	}
+
 }

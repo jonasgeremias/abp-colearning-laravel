@@ -27,5 +27,4 @@ class Pessoa extends Authenticatable
 	 {
 		return $this->belongsTo('App\PessoaStatus', 'status_id');
 	 }
-
 }
