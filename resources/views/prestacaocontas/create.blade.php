@@ -2,85 +2,380 @@
 
 @section('content')
 <div class="page-header">
-	<a class="btn btn-primary pull-right" href="{{ route('users.index') }}" role="button">Voltar</a>
-	<h2>Novo Usuário do Sistema</h2>
+	<a class="btn btn-primary pull-right" href="{{ route('prestacaocontas.index') }}" role="button">Voltar</a>
+	<h2>Nova Prestação de Contas</h2>
 </div>
 
-<form action="{{ route('users.store') }}" method="post">
+<form action="{{ route('prestacaocontas.store') }}" method="post">
 	@csrf
 	<fieldset>
-		<div class="form-group @if ($errors->has('avatar')) has-error @endif">
-			<label class="control-label" for="avatar">Foto do usuário</label>
-			<input onclick="this.value=null" onchange="" type="file" id="avatar" name="avatar" class="form-control btn btn-primary" accept="image/png, image/jpeg" />
-			@if ($errors->has('avatar'))
+		
+		<!-- Aqui tem que ter função para pegar o id do usuário logado {{Auth::guard()->user()->id }}-->
+		<div class="form-group @if($errors->has('user_id')) has-error @endif">
+			<label class="control-label" for="user_id">Usuário: {{Auth::guard()->user()->name }}</label>
+			<input type="text" name="user_id" id="user_id"value="{{Auth::guard()->user()->id}}" disabled>
+			@if ($errors->has('user_id'))
 			<span class="invalid-feedback help-block" role="alert">
-				<strong>{{ $errors->first('avatar') }}</strong>
+				<strong>{{ $errors->first('user_id') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<!-- gerar automatico qdo usuário(salvar editar, até estar em análise) e admin pode midificar STATUS = 1 Aprovada / 2 Reprovada / 3 Em análise / 4 Incompleta -->
+		<div class="form-group @if ($errors->has('status_id')) has-error @endif">
+			<label class="control-label" for="status_id">Status</label>
+			<select class="form-control" id="status_id" name="status_id">
+				@foreach ($status as $id => $desc_status)
+				<option value="{{ $id }}">{{ $desc_status }}</option>
+				@endforeach
+			</select>
+			@if ($errors->has('status_id'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('status_id') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<div class="form-group @if ($errors->has('registro_membros_id')) has-error @endif">
+			<label class="control-label" for="registro_membros_id">Membros da empresa</label>
+			<ul>
+			@foreach ($prestacaoMembros as $id => $membros)
+				<li>{{ $id }} - {{$membros}}</li>
+			@endforeach
+			</ul>
+			@if ($errors->has('registro_membros_id'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('registro_membros_id') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+		<h3> Questionário </h3>
+		<hr>
+
+		<div class="form-group @if ($errors->has('empresa_id')) has-error @endif">
+			<label class="control-label" for="empresa_id">1 - Qual é a sua empresa?</label>
+			<select class="form-control" id="empresa_id" name="empresa_id">
+				@foreach ($empresa as $id => $empresa_nome)
+				<option value="{{ $id }}">{{ $empresa_nome }}</option>
+				@endforeach
+			</select>
+			@if ($errors->has('empresa_id'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('empresa_id') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('mes_referencia')) has-error @endif">
+			<label type="text" min="1" max="12" class="control-label" for="mes_referencia">2 - Qual o mês da prestação de contas?*</label>
+			<p>*Informe um número de 1 a 12 para: 1-Janeiro / 2-Fevereiro / 3-Março / 4-Abril / 5-Maio / 6-Junho / 7-Julho / 8-Agosto / 9-Setembro / 10-Outubro / 11-Novembro / 12-Dezembro</p>
+			<input type="text" class="form-control" id="mes_referencia" name="mes_referencia">
+			@if ($errors->has('mes_referencia'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('mes_referencia') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+		<h3> Prestação de Contas </h3>
+		<p> Nesta seção será feita a prestação de contas mensal. Caso não haja faturamento anexe apenas a DRE de sua empresa. Caso não possua a DRE (apenas MEI ou sem CNPJ) para prestar contas apenas preencha e assine a declaração do link www.XXX.com e anexe no item 6 (em PDF).</p>
+		<hr>
+
+		<div class="form-group @if ($errors->has('faturamento_bruto')) has-error @endif">
+			<label class="control-label" for="faturamento_bruto">3 - Qual o Faturamento Bruto do mês corrente?</label>
+			<p>* O faturamento bruto de uma empresa é tudo aquilo que ela arrecadou em suas vendas e
+			serviços prestados. (Responda apenas com números 00,00 e não utilize ponto, apenas virgula)</p>
+			<input type="text" step="0.01" class="form-control" id="faturamento_bruto" name="faturamento_bruto">
+			@if ($errors->has('faturamento_bruto'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('faturamento_bruto') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('faturamento_liquido')) has-error @endif">
+			<label class="control-label" for="faturamento_liquido">4 - Qual o Faturamento Líquido do mês corrente?*</label>
+			<p>* Faturamento líquido é o total do faturamento, deduzidos dos impostos que incidem sobre a venda. (Responda apenas com números 00,00 e não utilize ponto, apenas virgula)</p>
+			<input type="text" step="0.01" class="form-control" id="faturamento_liquido" name="faturamento_liquido">
+			@if ($errors->has('faturamento_liquido'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('faturamento_liquido') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('custo_operacional')) has-error @endif">
+			<label class="control-label" for="custo_operacional">5 - Qual foi o custo operacional do mês?*</label>
+			<p>* Faça uma soma dos custos econômico e financeiro da operação Custo econômico (são custos indiretos e intangíveis, ex.: custo de horas de trabalho). Custo financeiro (é o quanto de dinheiro foi gasto). (Responda apenas com números 00,00 e não utilize ponto, apenas virgula)</p>
+			<input type="text" class="form-control" id="custo_operacional" name="custo_operacional">
+			@if ($errors->has('custo_operacional'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('custo_operacional') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<!--
+		<div class="form-group @if ($errors->has('anexo_dre')) has-error @endif">
+			<label class="control-label" for="anexo_dre">6 Anexe aqui sua demonstração do resultado do exercício e todas as notas fiscais emitidas, em um mesmo arquivo, seguindo o padrão de nomenclatura "[NomeEmpresa]_[Mês].[Ano]_NFe[NumeroInicio]-[NumeroFinal]"*   </label>
+			<p>* Ex.: Colearning_Janeiro.2020_NFe3-7 * Para adicionar um arquivo compilando com o DRE e todas as notas é fácil é só colocar no https://www.ilovepdf.com/pt (https://www.ilovepdf.com/pt) e juntar tudo. Anexe a DRE na primeira pagina e as NFe em sequencia</p>
+			<input type="text" class="form-control" id="anexo_dre" name="anexo_dre">
+			@if ($errors->has('anexo_dre'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('anexo_dre') }}</strong>
+			</span>
+			@endif
+		</div> -->
+		<div class="form-group">
+			<p>6 - Anexe aqui sua demonstração do resultado do exercício e todas as notas fiscais emitidas, em um mesmo arquivo, seguindo o padrão de nomenclatura [NomeEmpresa]_[Mês].[Ano]_NFe[NumeroInicio]-[NumeroFinal]" </p>
+			<p>Ex.: Colearning_Janeiro.2020_NFe3-7 * Para adicionar um arquivo compilando com o DRE e todas as notas é fácil é só colocar no https://www.ilovepdf.com/pt (https://www.ilovepdf.com/pt) e juntar tudo. Anexe a DRE na primeira pagina e as NFe em sequencia </p>
+		</div>
+		<div class="form-group @if ($errors->has('anexo_dre')) has-error @endif">
+			<label class="control-label" for="anexo_dre">6 - Anexo DRE</label>
+			<input onclick="this.value=null" onchange="" type="file" id="anexo_dre" name="anexo_dre" class="form-control btn btn-primary" accept="application/pdf" />
+			@if ($errors->has('anexo_dre'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('anexo_dre') }}</strong>
 			</span>
 			@endif
 		</div>
 
 		<div style="display: flex;flex-direction: column;justify-content: center;">
 		<p>
-			<img class='avatar' id='img_avatar' style="width: 150px;height: 150px;" src="" alt="" />
-			<button type="button" onclick="deleteAvatar()" class="btn btn-default btn-sm">Excluir Foto</button>
+			<img class='anexo_dre' id='img_anexo_dre' style="width: 150px;height: 150px;" src="" alt="" />
+			<button type="button" onclick="deleteAnexoDre()" class="btn btn-default btn-sm">Excluir DRE</button>
 		</p>
 		</div>
 
-		<div class="form-group @if ($errors->has('name')) has-error @endif">
-			<label class="control-label" for="name">Nome do Usuário</label>
-			<input type="text" class="form-control" id="name" name="name">
-			@if ($errors->has('name'))
+		<hr>
+
+		<div class="form-group @if ($errors->has('obs')) has-error @endif">
+			<label type="text" class="control-label" for="obs">7 - Notas canceladas, exceções ou observações.*</label>
+			<p>*Caso a empresa cancelou alguma nota fiscal cite a sequencia da mesma aqui. Ou caso haja algum caso extraordinário em seu faturamento.</p>
+			<input type="text" class="form-control" id="obs" name="obs">
+			@if ($errors->has('obs'))
 			<span class="invalid-feedback help-block" role="alert">
-				<strong>{{ $errors->first('name') }}</strong>
+				<strong>{{ $errors->first('obs') }}</strong>
 			</span>
 			@endif
 		</div>
 
-		<div class="form-group @if ($errors->has('permission_id')) has-error @endif">
-			<label class="control-label" for="permission_id">Tipo de Permissão</label>
-			<select class="form-control" id="permission_id" name="permission_id">
-				@foreach ($userPermission as $id => $permission)
-				<option value="{{ $id }}">{{ $permission }}</option>
-				@endforeach
-			</select>
-			@if ($errors->has('permission_id'))
+		<hr>
+		<h3>Evolução dos negócios</h3>
+		<p>Nesta seção buscamos entender a sua relação com o mercado. Caso não possua as respostas diga "Não mensurado" ou (0), mas lembre-se se estamos perguntando é por que é um dado que provavelmente a empresa deveria ter.</p>
+		<hr>
+
+		<div class="form-group @if ($errors->has('qtd_cliente')) has-error @endif">
+			<label type="text" class="control-label" for="qtd_cliente">8 - Qual o número total de clientes no mês? (Responda apenas com números)</label>
+			<input type="text" class="form-control" id="qtd_cliente" name="qtd_cliente">
+			@if ($errors->has('qtd_cliente'))
 			<span class="invalid-feedback help-block" role="alert">
-				<strong>{{ $errors->first('permission_id') }}</strong>
+				<strong>{{ $errors->first('qtd_cliente') }}</strong>
 			</span>
 			@endif
 		</div>
 
-		<div class="form-group @if ($errors->has('email')) has-error @endif">
-			<label class="control-label" for="email">E-mail de Acesso</label>
-			<input type="email" class="form-control" id="email" name="email">
-			@if ($errors->has('email'))
+		<hr>
+
+		<div class="form-group @if ($errors->has('qtd_novos_clientes')) has-error @endif">
+			<label type="text" class="control-label" for="qtd_novos_clientes">9 - Qual o número de novos clientes no mês? (Responda apenas com números)</label>
+			<input type="text" class="form-control" id="qtd_novos_clientes" name="qtd_novos_clientes">
+			@if ($errors->has('qtd_novos_clientes'))
 			<span class="invalid-feedback help-block" role="alert">
-				<strong>{{ $errors->first('email') }}</strong>
+				<strong>{{ $errors->first('qtd_novos_clientes') }}</strong>
 			</span>
 			@endif
 		</div>
-		<div class="form-group @if ($errors->has('password')) has-error @endif">
-			<label class="control-label" for="password">Senha de Acesso</label>
-			<input type="password" class="form-control" id="password" name="password">
-			@if ($errors->has('password'))
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('qtd_perda_clientes')) has-error @endif">
+			<label type="text" class="control-label" for="qtd_perda_clientes">10 - Qual a perda de clientes no mês? (Responda apenas com números)</label>
+			<input type="text" class="form-control" id="qtd_perda_clientes" name="qtd_perda_clientes">
+			@if ($errors->has('qtd_perda_clientes'))
 			<span class="invalid-feedback help-block" role="alert">
-				<strong>{{ $errors->first('password') }}</strong>
+				<strong>{{ $errors->first('qtd_perda_clientes') }}</strong>
 			</span>
 			@endif
 		</div>
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('cac')) has-error @endif">
+			<label type="text" class="control-label" for="cac">11 - Qual o seu custo para aquisição de clientes (CAC)? (Responda apenas com números 00,00, não utilize ponto, use apenas virgula[00,00])</label>
+			<input type="text" class="form-control" id="cac" name="cac">
+			@if ($errors->has('cac'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('cac') }}</strong>
+			</span>
+			@endif
+		</div>		
+
+		<hr>
+
+		<div class="form-group @if ($errors->has('prev_lancamento')) has-error @endif">
+			<label type="text" class="control-label" for="prev_lancamento"> 12 - Caso sua empresa não esteja no mercado, qual a previsão para entrada no mercado (em meses)? (Responda apenas com números em meses) </label>
+			<input type="text" class="form-control" id="prev_lancamento" name="prev_lancamento">
+			@if ($errors->has('prev_lancamento'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('prev_lancamento') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
 		<div class="form-group">
-			<label class="control-label" for="password_confirmation">Repita a Senha</label>
-			<input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+			<p>13 - Qual sua percepção quanto ao nível de eficiência operacional das seguintes áreas de sua empresa? (Essa é uma autoavaliação, insira um valor de 0 a 5 para avaliar.)</p>
+			<p>0 - (não operante)</p>
+			<p>5 - (totalmente operante e eficiente)</p>
 		</div>
+		<div class="form-group @if ($errors->has('per_vendas')) has-error @endif">
+			<label type="text" class="control-label" for="per_vendas"> 13.1 - Vendas </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_vendas" name="per_vendas">
+			@if ($errors->has('per_vendas'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_vendas') }}</strong>
+			</span>
+			@endif
+		</div>
+		<div class="form-group @if ($errors->has('per_tecnicos')) has-error @endif">
+			<label type="text" class="control-label" for="per_tecnicos"> 13.2 - Técnico </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_tecnicos" name="per_tecnicos">
+			@if ($errors->has('per_tecnicos'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_tecnicos') }}</strong>
+			</span>
+			@endif
+		</div>
+		<div class="form-group @if ($errors->has('per_juridicos')) has-error @endif">
+			<label type="text" class="control-label" for="per_juridicos"> 13.3 - Jurídico </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_juridicos" name="per_juridicos">
+			@if ($errors->has('per_juridicos'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_juridicos') }}</strong>
+			</span>
+			@endif
+		</div>
+		<div class="form-group @if ($errors->has('per_pessoas')) has-error @endif">
+			<label type="text" class="control-label" for="per_pessoas"> 13.4 - Pessoas </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_pessoas" name="per_pessoas">
+			@if ($errors->has('per_pessoas'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_pessoas') }}</strong>
+			</span>
+			@endif
+		</div>
+		<div class="form-group @if ($errors->has('per_financeiro')) has-error @endif">
+			<label type="text" class="control-label" for="per_financeiro"> 13.5 - Financeiro </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_financeiro" name="per_financeiro">
+			@if ($errors->has('per_financeiro'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_financeiro') }}</strong>
+			</span>
+			@endif
+		</div> 
+		<div class="form-group @if ($errors->has('per_marketing')) has-error @endif">
+			<label type="text" class="control-label" for="per_marketing"> 13.6 - Marketing </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_marketing" name="per_marketing">
+			@if ($errors->has('per_marketing'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_marketing') }}</strong>
+			</span>
+			@endif
+		</div>
+		<div class="form-group @if ($errors->has('per_gestao')) has-error @endif">
+			<label type="text" class="control-label" for="per_gestao"> 13.7 - Gestão </label>
+			<input type="number" min="0" max="5" class="form-control" id="per_gestao" name="per_gestao">
+			@if ($errors->has('per_gestao'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('per_gestao') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group">
+			<p>14 - Qual o seu nível de otimismo com o seu negócio? (insira um valor de 0 a 10 para avaliar.)</p>
+			<p>0 - (pessimista - não sei se tem futuro)</p>
+			<p>10 - (otimista - vou ficar milionário)</p>
+		</div>
+		<div class="form-group @if ($errors->has('nivel_otimismo')) has-error @endif">
+			<label type="text" class="control-label" for="nivel_otimismo"> 14 - Otimismo no negócio? </label>
+			<input type="number" min="0" max="10" class="form-control" id="nivel_otimismo" name="nivel_otimismo">
+			@if ($errors->has('nivel_otimismo'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('nivel_otimismo') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group">
+			<p>15 - Como você avalia sua interação com o Colearning e os outros incubados? (insira um valor de 0 a 10 para avaliar.)</p>
+			<p>0 - (existem outros?)</p>
+			<p>10 - (sinergia total)</p>
+		</div>
+		<div class="form-group @if ($errors->has('nivel_interacao')) has-error @endif">
+			<label type="text" class="control-label" for="nivel_interacao"> 15 - Interação Colearning? </label>
+			<input type="number" min="0" max="10" class="form-control" id="nivel_interacao" name="nivel_interacao">
+			@if ($errors->has('nivel_interacao'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('nivel_interacao') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group">
+			<p>16 - Qual o seu nível de satisfação com o Colearning? (insira um valor de 0 a 10 para avaliar.)</p>
+			<p>0 - (não tenho suporte?)</p>
+			<p>10 - (vou morar na SATC)</p>
+		</div>
+		<div class="form-group @if ($errors->has('nivel_satisfacao')) has-error @endif">
+			<label type="text" class="control-label" for="nivel_satisfacao"> 16 - Satisfação Colearning? </label>
+			<input type="number" min="0" max="10" class="form-control" id="nivel_satisfacao" name="nivel_satisfacao">
+			@if ($errors->has('nivel_satisfacao'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('nivel_satisfacao') }}</strong>
+			</span>
+			@endif
+		</div>
+
+		<hr>
+
+		<div class="form-group">
+			<p>17 - Quais são seus próximos passos e o que o seu negócio precisa para o(s) próximo(s) mês(es)?</p>
+			<p>Conte ao Colearning quais são seus próximos passos, seu planejamento e também como podemos te ajudar.</p>
+		</div>
+		<div class="form-group @if ($errors->has('proximos_passos')) has-error @endif">
+			<label type="text" class="control-label" for="proximos_passos"> 17 - Próximos Passos?</label>
+			<input type="text" class="form-control" id="proximos_passos" name="proximos_passos">
+			@if ($errors->has('proximos_passos'))
+			<span class="invalid-feedback help-block" role="alert">
+				<strong>{{ $errors->first('proximos_passos') }}</strong>
+			</span>
+			@endif
+		</div>
+
 		<br />
-		<button type="submit" class="btn btn-success">Cadastrar Usuário</button>
+		<button type="submit" class="btn btn-success">Cadastrar Prestação de Contas</button>
 	</fieldset>
 
-	<script>
-		function deleteAvatar() {
-			document.getElementById('avatar').value = "";
-			return true;
-		}
 	</script>
 </form>
 @endsection

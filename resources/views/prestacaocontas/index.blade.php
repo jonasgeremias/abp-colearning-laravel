@@ -2,47 +2,56 @@
 
 @section('content')
 <div class="page-header">
-	<a class="btn btn-success pull-right" href="{{ route('empresas.create') }}" role="button"> + Adicionar Empresa</a>
-	<h2>Empresas</h2>
+	<a class="btn btn-success pull-right" href="{{ route('prestacaocontas.create') }}" role="button"> + Nova Prestação de Contas</a>
+	<h2>Prestação de Contas das Empresas</h2>
 </div>
 
 <div class="table-responsive">
-	<!-- <table class="table table-striped table-bordered">
+	<table class="table table-striped table-bordered">
 		<thead>
 			<tr>
-				<th>Avatar</th>
+				<!-- <td>Avatar</td> -->
 				<th>Código</th>
-				<th>Nome</th>
-				<th>Permissão</th>
-				<th>E-mail de Acesso</th>
-				<th>Ações</th>
+				<th>Empresa</th>
+				<th>Usuário</th>
+				<th>Registro de Membros</th>
+				<th>Status</th>
+				<th>Mês de Referência</th>
+				<th>Observação</th>
+				<th>Anexo DRE</th>
 			</tr>
 		</thead>
 		<tbody>
-			@foreach ($items as $user)
+			@foreach ($items as $prestacao)
 			<tr>	
-				<td>
-					@if($user->avatar)
-						<img class="avatar" style="width: 50px;height: 50px;" src="{{ asset('storage/' . $user->avatar) }}" alt="{{ $user->name }}" /></p>
+				<!--<td>
+					@if($prestacao->avatar)
+						<img class="avatar"  style="width: 50px;height: 50px;" src="{{ asset('storage/' . $prestacao->avatar) }}" alt="{{ $prestacao->name }}" /></p>
 					@endif
-				</td>
-				<td>{{ $user->id }}</td>
-				<td>{{ $user->name }}</td>
-				<td>{{ $userPermission[$user->permission_id] }}</td>
-				<td>{{ $user->email }}</td>
+				</td> -->
+				<td>{{ $prestacao->id }}</td>
+				<td>{{ $tipoP[$prestacao->empresa_id] }}</td>
+				<td>{{ $prestacaoContaStatus[$prestacao->status_id] }}</td>
+				<td>IdMembros</td>
+				<!--<td>{{ $functiontipoP[$prestacao->registra_membros_id] }}</td>-->
+				<td>{{ $statusP[$prestacao->status_id] }}</td>
+				<td>{{ $prestacao->mes_referencia }}</td>
+				<td>{{ $prestacao->obs }}</td>
+				<td><a href="{{ asset('storage/' . $empresas->anexo_cont_social) }}"><img src="{{ asset('/images/doc-download.png') }}" style="width: 32px;height: auto;"></a></td>
 				<td>
-					<form action="{{ route('users.destroy', $user) }}" method="post">
+					<form action="{{ route('prestacaocontas.destroy', $prestacao) }}" method="post">
 						@method('DELETE')
 						@csrf
 						<div class="btn-group btn-group-xs" role="group" aria-label="Ações">
-							<a class="btn btn-primary" href="{{ route('users.edit', $user) }}" role="button">Editar</a>
+							<a class="btn btn-primary" href="{{ route('prestacaocontas.edit', $prestacao) }}" role="button">Editar</a>
 							<button class="btn btn-danger" type="submit">Deletar</button>
 						</div>
 					</form>
 				</td>
-			</tr> 
+								
+			</tr>
 			@endforeach
 		</tbody>
-	</table>-->
+	</table>
 </div>
 @endsection
